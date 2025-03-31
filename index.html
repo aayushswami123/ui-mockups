@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TravelBuddy App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: #2a6ed0;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      border-bottom: 4px solid #1a5bb0;
+    }
+    
+    h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+    
+    .screen {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+    
+    .screen-header {
+      background-color: #2a6ed0;
+      color: white;
+      padding: 15px 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .screen-content {
+      padding: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #2a6ed0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      transition: background-color 0.3s;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .btn:hover {
+      background-color: #1a5bb0;
+    }
+    
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    
+    .btn-success {
+      background-color: #28a745;
+    }
+    
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      font-weight: 600;
+    }
+    
+    .card-body {
+      padding: 15px;
+    }
+    
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .nav-tabs {
+      display: flex;
+      list-style: none;
+      border-bottom: 1px solid #dee2e6;
+      margin-bottom: 20px;
+    }
+    
+    .nav-tabs li {
+      margin-right: 5px;
+    }
+    
+    .nav-tabs a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #495057;
+      border-radius: 5px 5px 0 0;
+      border: 1px solid transparent;
+    }
+    
+    .nav-tabs a.active {
+      color: #2a6ed0;
+      background-color: white;
+      border-color: #dee2e6 #dee2e6 #fff;
+      border-bottom: 2px solid #2a6ed0;
+      font-weight: 600;
+    }
+    
+    .map-container {
+      height: 400px;
+      background-color: #e9ecef;
+      position: relative;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #6c757d;
+      background-image: url('/api/placeholder/1200/400');
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .map-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .filter-btn {
+      padding: 8px 15px;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .filter-btn.active {
+      background-color: #2a6ed0;
+      color: white;
+      border-color: #2a6ed0;
+    }
+    
+    .chat-container {
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      max-width: 80%;
+    }
+    
+    .message-content {
+      padding: 10px 15px;
+      border-radius: 15px;
+    }
+    
+    .message.user {
+      margin-left: auto;
+    }
+    
+    .message.user .message-content {
+      background-color: #2a6ed0;
+      color: white;
+    }
+    
+    .message.ai .message-content {
+      background-color: #e9ecef;
+    }
+    
+    .chat-input {
+      display: flex;
+      margin-top: 15px;
+    }
+    
+    .chat-input input {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+    
+    .user-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+      background-color: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6c757d;
+      font-weight: bold;
+    }
+    
+    .user-info {
+      flex-grow: 1;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      background-color: white;
+      padding: 15px 0;
+      border-top: 1px solid #eee;
+      position: sticky;
+      bottom: 0;
+    }
+    
+    .bottom-nav a {
+      text-align: center;
+      color: #6c757d;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .bottom-nav a.active {
+      color: #2a6ed0;
+      font-weight: 600;
+    }
+    
+    .icon {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .post {
+      margin-bottom: 20px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .post-header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background-color: #f8f9fa;
+    }
+    
+    .post-content {
+      padding: 15px;
+    }
+    
+    .post-actions {
+      display: flex;
+      border-top: 1px solid #eee;
+      padding: 10px 15px;
+    }
+    
+    .post-action {
+      margin-right: 20px;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+    }
+    
+    .post-action span {
+      margin-left: 5px;
+    }
+    
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TravelBuddy App UI Preview</h1>
+    <p>Interactive mockup of key screens</p>
+  </header>
+  
+  <div class="container">
+    <!-- Login & Registration Screen -->
+    <div class="screen">
+      <div class="screen-header">1. Login & Registration Screen</div>
+      <div class="screen-content">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="Enter your password">
+        </div>
+        <button class="btn">Login</button>
+        <button class="btn btn-secondary">Sign Up</button>
+        <div style="margin-top: 15px;">
+          <a href="#" style="color: #2a6ed0; text-decoration: none;">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Home Screen -->
+    <div class="screen">
+      <div class="screen-header">2. Home Screen</div>
+      <div class="screen-content">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search for destinations...">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <button class="btn">Discussions</button>
+          <button class="btn">Find Travel Buddy</button>
+          <button class="btn">AI Chatbot</button>
+        </div>
+        
+        <h3 style="margin-bottom: 15px;">Your Travel Suggestions</h3>
+        <div class="grid">
+          <div class="card">
+            <img src="/api/placeholder/400/180" alt="Paris" class="card-img">
+            <div class="card-body">
+              <h4>Paris, France</h4>
+              <p>Perfect for art lovers and romantic getaways. Visit in spring for best experience.</p>
+              <button class="btn" style="margin-top: 10px;">Explore</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="/api/placeholder/400/180" alt="Bali" class="card-img">
+            <div class="card-body">
+              <h4>Bali, Indonesia</h4>
+              <p>Beautiful beaches and vibrant culture. Great for relaxation and adventure.</p>
+              <button class="btn" style="margin-top: 10px;">Explore</button>
+            </div>
+          </div>
+          <div class="card">
+            <img src="/api/placeholder/400/180" alt="Tokyo" class="card-img">
+            <div class="card-body">
+              <h4>Tokyo, Japan</h4>
+              <p>Modern city with rich traditions. Explore unique cuisine and technology.</p>
+              <button class="btn" style="margin-top: 10px;">Explore</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Map Screen -->
+    <div class="screen">
+      <div class="screen-header">3. Map Screen</div>
+      <div class="screen-content">
+        <div class="filter-group">
+          <button class="filter-btn active">All</button>
+          <button class="filter-btn">Attractions</button>
+          <button class="filter-btn">Restaurants</button>
+          <button class="filter-btn">Hotels</button>
+          <button class="filter-btn">Activities</button>
+        </div>
+        
+        <div class="map-container">
+          <div class="map-placeholder"></div>
+          <div class="map-overlay">
+            <strong>Current Location:</strong> San Francisco, CA
+          </div>
+        </div>
+        
+        <h3 style="margin: 20px 0 15px;">Nearby Places</h3>
+        <div class="grid">
+          <div class="card">
+            <div class="card-body">
+              <h4>Golden Gate Park</h4>
+              <p>⭐⭐⭐⭐⭐ (4.8)</p>
+              <p>Distance: 1.2 miles</p>
+              <p>A beautiful urban park with gardens, museums, and recreational areas.</p>
+              <button class="btn" style="margin-top: 10px;">View Details</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h4>Ferry Building Marketplace</h4>
+              <p>⭐⭐⭐⭐ (4.6)</p>
+              <p>Distance: 2.5 miles</p>
+              <p>Historic ferry terminal with gourmet food vendors and stunning bay views.</p>
+              <button class="btn" style="margin-top: 10px;">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Discussion Board -->
+    <div class="screen">
+      <div class="screen-header">4. Discussion Board</div>
+      <div class="screen-content">
+        <button class="btn" style="margin-bottom: 20px;">Create New Post</button>
+        
+        <div class="post">
+          <div class="post-header">
+            <div class="user-avatar">JD</div>
+            <div class="user-info">
+              <div class="user-name">John Doe</div>
+              <div style="font-size: 14px; color: #6c757d;">Posted 2 hours ago</div>
+            </div>
+          </div>
+          <div class="post-content">
+            <h4>Best time to visit Thailand?</h4>
+            <p>Hi everyone! Planning a trip to Thailand and wondering what's the best time of year to visit? Looking for good weather but fewer tourists. Any recommendations?</p>
+          </div>
+          <div class="post-actions">
+            <div class="post-action">👍 <span>24</span></div>
+            <div class="post-action">💬 <span>12 comments</span></div>
+            <div class="post-action">🔄 <span>Share</span></div>
+          </div>
+        </div>
+        
+        <div class="post">
+          <div class="post-header">
+            <div class="user-avatar">AS</div>
+            <div class="user-info">
+              <div class="user-name">Alice Smith</div>
+              <div style="font-size: 14px; color: #6c757d;">Posted yesterday</div>
+            </div>
+          </div>
+          <div class="post-content">
+            <h4>Hidden gems in Barcelona</h4>
+            <p>Just got back from Barcelona and discovered some amazing spots off the tourist path! Who wants me to share my itinerary and tips?</p>
+          </div>
+          <div class="post-actions">
+            <div class="post-action">👍 <span>56</span></div>
+            <div class="post-action">💬 <span>30 comments</span></div>
+            <div class="post-action">🔄 <span>Share</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Travel Buddy Finder -->
+    <div class="screen">
+      <div class="screen-header">5. Travel Buddy Finder</div>
+      <div class="screen-content">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+          <span style="margin-right: 10px;">Show my availability:</span>
+          <button class="btn btn-success">Available for Travel</button>
+        </div>
+        
+        <h3 style="margin-bottom: 15px;">Suggested Travel Buddies</h3>
+        
+        <div class="user-item">
+          <div class="user-avatar">MJ</div>
+          <div class="user-info">
+            <div class="user-name">Mike Johnson</div>
+            <div>Interests: Hiking, Photography, Food</div>
+            <div style="color: #28a745;">Available in San Francisco, CA</div>
+          </div>
+          <button class="btn">Chat</button>
+        </div>
+        
+        <div class="user-item">
+          <div class="user-avatar">LP</div>
+          <div class="user-info">
+            <div class="user-name">Lisa Parker</div>
+            <div>Interests: Museums, History, Local Cuisine</div>
+            <div style="color: #28a745;">Available in San Francisco, CA</div>
+          </div>
+          <button class="btn">Chat</button>
+        </div>
+        
+        <div class="user-item">
+          <div class="user-avatar">RK</div>
+          <div class="user-info">
+            <div class="user-name">Robert Kim</div>
+            <div>Interests: Adventure, Nature, Cycling</div>
+            <div style="color: #28a745;">Available in Oakland, CA</div>
+          </div>
+          <button class="btn">Chat</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI Chatbot -->
+    <div class="screen">
+      <div class="screen-header">6. AI Chatbot</div>
+      <div class="screen-content">
+        <div class="chat-container">
+          <div class="chat-messages">
+            <div class="message ai">
+              <div class="message-content">
+                <p>Hi there! I'm your AI travel assistant. How can I help you plan your next adventure?</p>
+              </div>
+            </div>
+            
+            <div class="message user">
+              <div class="message-content">
+                <p>I'm planning a trip to Italy in September. What cities should I visit?</p>
+              </div>
+            </div>
+            
+            <div class="message ai">
+              <div class="message-content">
+                <p>Great choice! For a first-time trip to Italy in September, I'd recommend visiting Rome, Florence, and Venice. Each offers unique experiences:</p>
+                <p><strong>Rome:</strong> Ancient history, Vatican, incredible food</p>
+                <p><strong>Florence:</strong> Renaissance art, Tuscan cuisine</p>
+                <p><strong>Venice:</strong> Unique canal city, less crowded in September</p>
+                <p>How long is your trip? I can help create an itinerary.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chat-input">
+            <input type="text" class="form-control" placeholder="Type your question...">
+            <button class="btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Profile Management -->
+    <div class="screen">
+      <div class="screen-header">7. Profile Management</div>
+      <div class="screen-content">
+        <div style="display: flex; align-items: center; margin-bottom: 30px;">
+          <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; margin-right: 20px; font-size: 36px; color: #6c757d;">
+            JD
+          </div>
+          <div>
+            <h3>John Doe</h3>
+            <p>Member since January 2023</p>
+            <button class="btn" style="margin-top: 10px;">Edit Profile</button>
+          </div>
+        </div>
+        
+        <ul class="nav-tabs">
+          <li><a href="#" class="active">Profile Info</a></li>
+          <li><a href="#">Travel Preferences</a></li>
+          <li><a href="#">Past Trips</a></li>
+        </ul>
+        
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-control" value="john.doe@example.com" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" class="form-control" value="San Francisco, CA">
+        </div>
+        
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea class="form-control" rows="3">Avid traveler and photographer. Love exploring new cultures and trying local cuisines.</textarea>
+        </div>
+        
+        <h4 style="margin: 20px 0 15px;">Travel Interests</h4>
+        <div class="filter-group">
+          <button class="filter-btn active">Adventure</button>
+          <button class="filter-btn active">Food</button>
+          <button class="filter-btn active">Photography</button>
+          <button class="filter-btn">History</button>
+          <button class="filter-btn">Nature</button>
+          <button class="filter-btn">Beaches</button>
+          <button class="filter-btn">Urban</button>
+        </div>
+        
+        <button class="btn" style="margin-top: 20px;">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Admin Dashboard -->
+    <div class="screen">
+      <div class="screen-header">8. Admin Dashboard</div>
+      <div class="screen-content">
+        <h3 style="margin-bottom: 20px;">Admin Control Panel</h3>
+        
+        <ul class="nav-tabs">
+          <li><a href="#" class="active">Reported Posts</a></li>
+          <li><a href="#">User Management</a></li>
+          <li><a href="#">Action Log</a></li>
+        </ul>
+        
+        <div class="post">
+          <div class="post-header">
+            <div class="user-avatar">TS</div>
+            <div class="user-info">
+              <div class="user-name">Tom Smith</div>
+              <div style="font-size: 14px; color: #6c757d;">Reported 3 times</div>
+            </div>
+          </div>
+          <div class="post-content">
+            <h4>Spam Advertisement</h4>
+            <p>This post contains promotional content that violates community guidelines.</p>
+          </div>
+          <div class="post-actions" style="justify-content: flex-end;">
+            <button class="btn btn-secondary">Ignore Report</button>
+            <button class="btn" style="background-color: #dc3545; margin-left: 10px;">Remove Post</button>
+          </div>
+        </div>
+        
+        <div class="post">
+          <div class="post-header">
+            <div class="user-avatar">JW</div>
+            <div class="user-info">
+              <div class="user-name">Jane Wilson</div>
+              <div style="font-size: 14px; color: #6c757d;">Reported 1 time</div>
+            </div>
+          </div>
+          <div class="post-content">
+            <h4>Inappropriate Content</h4>
+            <p>This post contains inappropriate language that violates community guidelines.</p>
+          </div>
+          <div class="post-actions" style="justify-content: flex-end;">
+            <button class="btn btn-secondary">Ignore Report</button>
+            <button class="btn" style="background-color: #dc3545; margin-left: 10px;">Remove Post</button>
+          </div>
+        </div>
+        
+        <h4 style="margin: 30px 0 15px;">Recent Actions</h4>
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+              <th style="padding: 10px; text-align: left;">Date</th>
+              <th style="padding: 10px; text-align: left;">Admin</th>
+              <th style="padding: 10px; text-align: left;">Action</th>
+              <th style="padding: 10px; text-align: left;">User/Content</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #dee2e6;">
+              <td style="padding: 10px;">Mar 30, 2025</td>
+              <td style="padding: 10px;">Admin1</td>
+              <td style="padding: 10px;">Removed post</td>
+              <td style="padding: 10px;">User: Mark Johnson</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #dee2e6;">
+              <td style="padding: 10px;">Mar 28, 2025</td>
+              <td style="padding: 10px;">Admin2</td>
+              <td style="padding: 10px;">Warned user</td>
+              <td style="padding: 10px;">User: Sarah Williams</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #dee2e6;">
+              <td style="padding: 10px;">Mar 25, 2025</td>
+              <td style="padding: 10px;">Admin1</td>
+              <td style="padding: 10px;">Suspended account</td>
+              <td style="padding: 10px;">User: David Brown</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="screen">
+      <div class="screen-header">Mobile Navigation</div>
+      <div class="screen-content">
+        <div class="bottom-nav">
+          <a href="#" class="active">
+            <span class="icon">🏠</span>
+            Home
+          </a>
+          <a href="#">
+            <span class="icon">🗺️</span>
+            Map
+          </a>
+          <a href="#">
+            <span class="icon">💬</span>
+            Discuss
+          </a>
+          <a href="#">
+            <span class="icon">👥</span>
+            Buddies
+          </a>
+          <a href="#">
+            <span class="icon">🤖</span>
+            AI Chat
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
